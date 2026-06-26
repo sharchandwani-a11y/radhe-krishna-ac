@@ -20,13 +20,13 @@ $process = [
   ["step"=>"02","icon"=>"👨‍🔧","title"=>"Technician Visit","desc"=>"A certified technician reaches you within 2 hours with a full toolkit."],
   ["step"=>"03","icon"=>"📄","title"=>"Upfront Quote","desc"=>"You approve the exact cost before any work begins — no surprises."],
   ["step"=>"04","icon"=>"🔨","title"=>"Repair & Test","desc"=>"The fix is completed and cooling is tested in front of you, every time."],
-  ["step"=>"05","icon"=>"🛡️","title"=>"90-Day Guarantee","desc"=>"Same issue returns within 90 days — we fix it again at no extra cost."],
+ 
 ];
 $stats = [
-  ["number"=>"12+","label"=>"Years serving Surat","icon"=>"📅"],
-  ["number"=>"8,400+","label"=>"AC units serviced","icon"=>"❄️"],
-  ["number"=>"112 min","label"=>"Average response time","icon"=>"⏱️"],
-  ["number"=>"4.9/5","label"=>"Customer rating","icon"=>"⭐"],
+  ["number"=>"12+","label"=>"Years serving Surat","icon"=>""],
+  ["number"=>"8,400+","label"=>"AC units serviced","icon"=>""],
+  ["number"=>"112 min","label"=>"Average response time","icon"=>""],
+  ["number"=>"4.9/5","label"=>"Customer rating","icon"=>""],
 ];
 $amc_plans = [
   ["name"=>"Basic","price"=>"₹1,499","popular"=>false,
@@ -72,10 +72,10 @@ $faqs = [
 ];
 $nav_links = ["Home","Services","Gallery","About Us","Contact"];
 $gallery = [
-  ["🧰","Split AC installation, Vijay Nagar"],
-  ["🧼","Deep coil cleaning in progress"],
-  ["🔬","Nitrogen leak test before gas refill"],
-  ["📋","Scheduled AMC service visit"],
+  ["image"=>"images/gallery/ac-installation.png","caption"=>"Split AC Installation","description"=>"Neat, secure installation with correct alignment, copper piping and complete cooling-performance testing."],
+  ["image"=>"images/gallery/ac-deep-cleaning.png","caption"=>"Deep Coil Cleaning","description"=>"High-pressure indoor coil cleaning that removes dust and improves airflow, cooling and energy efficiency."],
+  ["image"=>"images/gallery/ac-leak-test.png","caption"=>"Gas Leak Detection","description"=>"Professional nitrogen pressure testing to locate hidden leaks before safe vacuuming and gas refilling."],
+  ["image"=>"images/gallery/ac-amc-service.png","caption"=>"Scheduled AMC Service","description"=>"Preventive maintenance that keeps your AC reliable, efficient and ready throughout the summer season."],
 ];
  
 // Form
@@ -119,8 +119,9 @@ if($_SERVER['REQUEST_METHOD']==='POST'&&isset($_POST['send_msg'])){
   --font:     'Inter',sans-serif;
 }
 html{scroll-behavior:smooth}
-body{font-family:var(--font);color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+body{font-family:var(--font);color:var(--text);background:var(--bg);font-size:15px;line-height:1.65;overflow-x:hidden;width:100%}
 a{color:inherit;text-decoration:none}
+img{max-width:100%}
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
@@ -164,14 +165,50 @@ nav a.active{color:var(--cyan)}
 .header-cta{background:var(--cyan);color:#000;padding:10px 20px;border-radius:8px;font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:8px;white-space:nowrap;box-shadow:0 0 20px rgba(0,212,255,.35);transition:box-shadow .25s,transform .2s}
 .header-cta:hover{box-shadow:0 0 36px rgba(0,212,255,.6);transform:translateY(-1px)}
  
+/* ═══ HAMBURGER + MOBILE NAV (NEW) ═══ */
+.hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;width:38px;height:38px;background:transparent;border:none;cursor:pointer;padding:0;flex-shrink:0}
+.hamburger span{display:block;height:2.5px;width:100%;background:var(--text);border-radius:2px;transition:transform .3s,opacity .3s}
+.hamburger.active span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+ 
+.mobile-nav{
+  display:flex;flex-direction:column;
+  position:fixed;top:0;right:0;height:100vh;width:78%;max-width:300px;
+  background:var(--bg-s);border-left:1px solid var(--border);
+  padding:90px 24px 24px;z-index:200;
+  transform:translateX(100%);transition:transform .35s ease;
+  box-shadow:-10px 0 40px rgba(0,0,0,.4);
+}
+.mobile-nav.open{transform:translateX(0)}
+.mobile-nav a{padding:14px 4px;border-bottom:1px solid var(--border);font-size:15px;font-weight:600;color:var(--text)}
+.mobile-nav a:hover{color:var(--cyan)}
+.mobile-nav .header-cta{margin-top:16px;justify-content:center}
+ 
+.nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150}
+.nav-overlay.open{display:block}
+ 
 /* ═══ HERO ═══ */
-.hero{position:relative;padding:80px 24px 0;overflow:hidden;background:var(--bg)}
+.hero{
+  position:relative;
+  padding:0;
+  overflow:hidden;
+  background:var(--bg);
+  min-height:100vh;
+}
 .hero-blob1{position:absolute;top:-100px;left:-60px;width:560px;height:560px;background:radial-gradient(circle,rgba(0,212,255,.09) 0%,transparent 70%);pointer-events:none}
 .hero-blob2{position:absolute;top:40px;right:-80px;width:460px;height:460px;background:radial-gradient(circle,rgba(37,99,235,.11) 0%,transparent 70%);pointer-events:none}
 .hero-inner{
-  max-width:1200px;margin:0 auto;
-  display:grid;grid-template-columns:1fr 460px;gap:40px;align-items:center;
-  position:relative;z-index:1;
+  max-width:1200px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0;
+  align-items:center;
+  position:relative;
+  z-index:1;
+  min-height:100vh;
+  padding-left:48px;
 }
 .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--cyan);letter-spacing:2px;text-transform:uppercase;background:var(--cg2);border:1px solid rgba(0,212,255,.2);padding:5px 14px;border-radius:20px;margin-bottom:20px}
 .hero-eyebrow::before{content:"●";font-size:8px;animation:blink 1.8s ease-in-out infinite}
@@ -194,31 +231,12 @@ nav a.active{color:var(--cyan)}
 .btn-outline{background:transparent;color:var(--text);padding:14px 28px;border-radius:10px;font-weight:600;font-size:14.5px;border:1.5px solid var(--border2);display:inline-flex;align-items:center;gap:9px;transition:border-color .25s,color .25s,background .25s,transform .2s}
 .btn-outline:hover{border-color:var(--cyan);color:var(--cyan);background:var(--cg2);transform:translateY(-3px)}
  
-/* ═══ HERO ═══ */
-.hero{
-  position:relative;
-  padding:0;
-  overflow:hidden;
-  background:var(--bg);
-  min-height:100vh;
-}
-.hero-inner{
-  max-width:1200px;
-  margin:0 auto;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:0;
-  align-items:center;
-  position:relative;
-  z-index:1;
-  min-height:100vh;
-  padding-left:48px;
-}
 .hero-visual{
   position:relative;
   display:flex;
   align-items:flex-end;
-  justify-content:center; padding-left:80px;
+  justify-content:center;
+  padding-left:0;
   height:100vh;
   overflow:hidden;
 }
@@ -228,19 +246,20 @@ nav a.active{color:var(--cyan)}
   transform:translate(-50%,-50%);
   width:100%;height:100%;
   border-radius:50%;
-  background:radial-gradient(circle,rgba(0,212,255,.35) 0%,rgba(0,82,212,.15) 55%,transparent 75%);
-  filter:blur(60px);
+  background:radial-gradient(circle,rgba(0,212,255,.16) 0%,rgba(0,82,212,.08) 48%,transparent 72%);
+  filter:blur(75px);
   z-index:1;
   pointer-events:none;
 }
 .hero-person-img{
   position:relative;
+  left:0;
   z-index:2;
-  width:auto;
-  height:90vh;
+  width:min(686px,50.4vw);
+  height:auto;
   max-width:none;
-  object-fit:contain;
-  filter:drop-shadow(0 20px 40px rgba(0,0,0,.65));
+  display:block;
+  filter:none;
   animation:floatEffect 4s ease-in-out infinite;
 }
 @keyframes floatEffect{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
@@ -320,13 +339,18 @@ section{padding:80px 24px}
 /* ═══ GALLERY ═══ */
 .gallery-bg{background:var(--bg-s)}
 .gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.gallery-item{border-radius:var(--r);overflow:hidden;position:relative}
-.gallery-thumb{height:180px;background:var(--bg-el);display:flex;align-items:center;justify-content:center;font-size:52px;border:1px solid var(--border);border-radius:var(--r) var(--r) 0 0;transition:transform .4s,border-color .3s,box-shadow .3s;cursor:pointer;position:relative;overflow:hidden}
-.gallery-thumb::after{content:'🔍';font-size:22px;position:absolute;bottom:10px;right:10px;opacity:0;transition:opacity .3s}
-.gallery-item:hover .gallery-thumb{transform:scale(1.05);border-color:rgba(0,212,255,.4);box-shadow:0 0 24px rgba(0,212,255,.12)}
-.gallery-item:hover .gallery-thumb::after{opacity:.7}
-.gallery-caption{font-size:12px;color:var(--muted);text-align:center;padding:10px;background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--r) var(--r);transition:color .25s,background .25s}
-.gallery-item:hover .gallery-caption{color:var(--cyan);background:var(--bg-el)}
+.gallery-item{border-radius:var(--r);overflow:hidden;position:relative;background:var(--bg-card);border:1px solid var(--border);transition:transform .35s,border-color .3s,box-shadow .3s}
+.gallery-thumb{height:210px;background:var(--bg-el);position:relative;overflow:hidden}
+.gallery-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(8,11,19,.38),transparent 55%);opacity:.45;transition:opacity .3s}
+.gallery-thumb img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .55s ease,filter .35s}
+.gallery-item:hover{transform:translateY(-6px);border-color:rgba(0,212,255,.4);box-shadow:0 16px 36px rgba(0,0,0,.3),0 0 24px rgba(0,212,255,.09)}
+.gallery-item:hover .gallery-thumb img{transform:scale(1.07);filter:saturate(1.08)}
+.gallery-item:hover .gallery-thumb::after{opacity:.15}
+.gallery-content{padding:16px 16px 18px;background:var(--bg-card);transition:background .25s}
+.gallery-caption{font-size:14px;font-weight:700;color:var(--text);text-align:center;margin-bottom:7px;transition:color .25s}
+.gallery-description{font-size:12px;line-height:1.65;color:var(--muted);text-align:center}
+.gallery-item:hover .gallery-content{background:var(--bg-el)}
+.gallery-item:hover .gallery-caption{color:var(--cyan)}
  
 /* ═══ TESTIMONIALS ═══ */
 .reviews-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
@@ -417,41 +441,53 @@ footer{background:var(--bg-s);border-top:1px solid var(--border);padding:56px 24
 @keyframes waPulse{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.4)}50%{box-shadow:0 4px 40px rgba(37,211,102,.75)}}
  
 /* ═══ GOOGLE MAPS ═══ */
-.map-section{background:var(--bg-s);padding:80px 24px}
-.map-wrap{border-radius:var(--r);overflow:hidden;border:1.5px solid var(--border2);box-shadow:0 0 40px rgba(0,212,255,.07);position:relative}
-.map-wrap iframe{display:block;width:100%;height:380px;border:none;filter:invert(92%) hue-rotate(180deg) saturate(1.2) brightness(.85)}
-.map-info-bar{display:flex;gap:32px;flex-wrap:wrap;align-items:center;background:var(--bg-card);border:1px solid var(--border2);border-radius:var(--r);padding:20px 28px;margin-top:20px}
-.map-info-item{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
-.map-info-item span{font-size:20px}
-.map-info-item strong{color:var(--text);font-weight:600}
-.map-directions{margin-left:auto;background:var(--cyan);color:#000;padding:11px 22px;border-radius:8px;font-weight:700;font-size:13.5px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 0 16px rgba(0,212,255,.3);transition:box-shadow .25s,transform .2s;white-space:nowrap}
-.map-directions:hover{box-shadow:0 0 28px rgba(0,212,255,.55);transform:translateY(-2px)}
+.map-section{background:linear-gradient(180deg,var(--bg-s),var(--bg));padding:80px 24px;position:relative;overflow:hidden}
+.map-section::before{content:'';position:absolute;width:520px;height:520px;right:-180px;top:40px;background:radial-gradient(circle,rgba(0,212,255,.08),transparent 70%);pointer-events:none}
+.map-card{position:relative;padding:8px;background:linear-gradient(145deg,rgba(0,212,255,.28),rgba(36,48,74,.75) 35%,rgba(13,17,32,.95));border-radius:22px;box-shadow:0 24px 70px rgba(0,0,0,.42),0 0 40px rgba(0,212,255,.08)}
+.map-wrap{height:430px;border-radius:16px;overflow:hidden;position:relative;background:var(--bg-el)}
+.map-wrap::after{content:'';position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 45px rgba(8,11,19,.38)}
+.map-wrap iframe{display:block;width:100%;height:100%;border:none;filter:saturate(.82) contrast(1.08) brightness(.9)}
+.map-badge{position:absolute;z-index:2;top:24px;left:24px;max-width:310px;display:flex;align-items:center;gap:13px;padding:14px 17px;background:rgba(8,11,19,.9);border:1px solid rgba(0,212,255,.28);border-radius:13px;box-shadow:0 12px 35px rgba(0,0,0,.38);backdrop-filter:blur(14px)}
+.map-badge-icon{width:42px;height:42px;flex:0 0 42px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:var(--cyan);color:#00151a;font-size:20px;box-shadow:0 0 20px rgba(0,212,255,.32)}
+.map-badge strong{display:block;color:var(--text);font-size:13.5px;margin-bottom:2px}
+.map-badge small{display:block;color:var(--muted);font-size:11.5px;line-height:1.45}
+.map-info-bar{display:grid;grid-template-columns:1.5fr 1fr 1fr auto;gap:12px;align-items:stretch;margin-top:16px}
+.map-info-item{display:flex;align-items:center;gap:12px;min-height:76px;padding:14px 16px;font-size:12.5px;line-height:1.5;color:var(--muted);background:linear-gradient(145deg,var(--bg-card),var(--bg-s));border:1px solid var(--border2);border-radius:12px;transition:border-color .25s,transform .25s,box-shadow .25s}
+.map-info-item:hover{transform:translateY(-3px);border-color:rgba(0,212,255,.35);box-shadow:0 10px 24px rgba(0,0,0,.24)}
+.map-info-item span{width:38px;height:38px;flex:0 0 38px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:var(--cg);color:var(--cyan);font-size:18px}
+.map-info-item strong{color:var(--text);font-weight:700}
+.map-directions{background:var(--cyan);color:#001116;padding:0 24px;border-radius:12px;font-weight:800;font-size:13.5px;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 0 22px rgba(0,212,255,.26);transition:box-shadow .25s,transform .2s;white-space:nowrap}
+.map-directions::after{content:'→';font-size:18px;transition:transform .2s}
+.map-directions:hover{box-shadow:0 0 34px rgba(0,212,255,.48);transform:translateY(-3px)}
+.map-directions:hover::after{transform:translateX(4px)}
  
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:900px){
   .header-inner{padding:12px 16px;height:auto}
   .logo-icon{width:120px;max-width:120px}
   nav{display:none}
-  .header-cta{padding:10px 14px;font-size:12px}
+  .hamburger{display:flex}
+  .header-cta{display:none}
   .hero{min-height:auto}
- .hero-inner{
-  grid-template-columns:1fr;
-  padding-left:20px;
-  padding-right:20px;
-  min-height:auto;
-  padding-top:80px;
-  padding-bottom:40px;
-}
+  .hero-inner{
+    grid-template-columns:1fr;
+    padding-left:20px;
+    padding-right:20px;
+    min-height:auto;
+    padding-top:50px;
+    padding-bottom:30px;
+  }
   .hero-content{text-align:center}
   .hero-sub,.serve-box{max-width:100%}
   .trust-strip{justify-content:center}
   .hero-btns{flex-direction:column}
   .hero-btns a{width:100%;justify-content:center}
-  .hero-visual{height:50vh}
-  .hero-person-img{height:45vh;max-width:100%}
+  .hero-visual{height:auto;padding-left:0;padding-top:20px}
+  .hero-person-img{left:0;width:min(504px,94.5vw);height:auto;max-width:none}
   .services-grid{grid-template-columns:repeat(2,1fr)}
-  .process-grid{flex-wrap:wrap}
-  .process-step{flex:0 0 calc(33.33% - 12px)}
+  .process-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px 12px}
+  .process-step{flex:none}
+  .process-step::after{display:none}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
   .why-amc-grid{grid-template-columns:1fr;gap:48px}
   .amc-plans{grid-template-columns:1fr;max-width:340px;margin:0 auto}
@@ -459,21 +495,36 @@ footer{background:var(--bg-s);border-top:1px solid var(--border);padding:56px 24
   .reviews-grid{grid-template-columns:repeat(2,1fr)}
   .faq-contact-grid{grid-template-columns:1fr}
   .footer-grid{grid-template-columns:1fr 1fr}
-  .map-info-bar{flex-direction:column;align-items:flex-start;gap:16px}
-  .map-directions{margin-left:0;width:100%;justify-content:center}
+  .map-info-bar{grid-template-columns:1fr 1fr}
+  .map-directions{min-height:68px}
 }
 @media(max-width:600px){
-  .hero h1{font-size:34px;line-height:1.15}
-  .hero-person-img{max-width:260px}
-  .section-title h2{font-size:28px}
+  .hero h1{font-size:30px;line-height:1.18}
+  .hero-eyebrow{font-size:11px}
+  .hero-sub{font-size:14.5px}
+  .hero-person-img{width:min(434px,94.5vw)}
+  .trust-item{padding:8px 10px;font-size:12px}
+  .section-title h2{font-size:24px}
   .services-grid,.reviews-grid,.gallery-grid{grid-template-columns:1fr}
+  .process-grid{grid-template-columns:repeat(2,1fr)}
   .stats-grid{grid-template-columns:1fr}
   .form-row{grid-template-columns:1fr}
   .footer-grid{grid-template-columns:1fr;text-align:center}
+  .footer-col ul li{justify-content:center}
+  .why-item:hover{transform:none}
   .strip-inner{flex-direction:column}
   .strip-stat{border-right:none;border-bottom:1px solid var(--border2);padding:12px 0}
   .strip-stat:last-child{border-bottom:none}
-  .logo-icon{width:110px}
+  .logo-icon{width:105px}
+  .mobile-nav{width:100%;max-width:100%}
+  section{padding:56px 18px}
+  .btn-send{float:none;width:100%;justify-content:center}
+  .map-card{padding:5px;border-radius:17px}
+  .map-wrap{height:330px;border-radius:13px}
+  .map-badge{top:14px;left:14px;right:14px;max-width:none;padding:11px 13px}
+  .map-info-bar{grid-template-columns:1fr}
+  .map-info-item{min-height:auto}
+  .map-directions{min-height:56px}
 }
 </style>
 </head>
@@ -499,8 +550,20 @@ footer{background:var(--bg-s);border-top:1px solid var(--border);padding:56px 24
     <a href="tel:<?= str_replace(' ','',$phone) ?>" class="header-cta">
       📞 <?= htmlspecialchars($phone) ?>
     </a>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
+ 
+<!-- ═══════════════ MOBILE NAV (NEW) ═══════════════ -->
+<div class="mobile-nav" id="mobileNav">
+  <?php foreach($nav_links as $link): ?>
+    <a href="#<?= strtolower(str_replace(' ','-',$link)) ?>"><?= htmlspecialchars($link) ?></a>
+  <?php endforeach; ?>
+  <a href="tel:<?= str_replace(' ','',$phone) ?>" class="header-cta">📞 Call Now: <?= htmlspecialchars($phone) ?></a>
+</div>
+<div class="nav-overlay" id="navOverlay"></div>
  
 <!-- ═══════════════ HERO ═══════════════ -->
 <section class="hero" id="home">
@@ -531,7 +594,7 @@ footer{background:var(--bg-s);border-top:1px solid var(--border);padding:56px 24
       </div>
     </div>
  
-    <!-- RIGHT: Image — FIXED -->
+    <!-- RIGHT: Image -->
     <div class="hero-visual">
       <div class="hero-glow"></div>
       <img src="ac.png" alt="Radhe Krishna AC Repair Technician" class="hero-person-img"/>
@@ -638,8 +701,15 @@ footer{background:var(--bg-s);border-top:1px solid var(--border);padding:56px 24
     <div class="gallery-grid">
       <?php foreach($gallery as $i=>$g): ?>
         <div class="gallery-item reveal delay-<?= $i+1 ?>">
-          <div class="gallery-thumb"><?= $g[0] ?></div>
-          <p class="gallery-caption"><?= htmlspecialchars($g[1]) ?></p>
+          <div class="gallery-thumb">
+            <img src="<?= htmlspecialchars($g['image']) ?>"
+                 alt="<?= htmlspecialchars($g['caption']) ?>"
+                 loading="lazy"/>
+          </div>
+          <div class="gallery-content">
+            <h3 class="gallery-caption"><?= htmlspecialchars($g['caption']) ?></h3>
+            <p class="gallery-description"><?= htmlspecialchars($g['description']) ?></p>
+          </div>
         </div>
       <?php endforeach; ?>
     </div>
@@ -691,9 +761,9 @@ footer{background:var(--bg-s);border-top:1px solid var(--border);padding:56px 24
   </div>
   <div class="brands-count-strip reveal">
     <div class="strip-inner">
-      <div class="strip-stat">✅ <strong>12+ brands</strong>&nbsp;serviced</div>
-      <div class="strip-stat">🔧 <strong>3,000+</strong>&nbsp;installations</div>
-      <div class="strip-stat">🛡️ All repairs&nbsp;<strong>warranty-backed</strong></div>
+      <div class="strip-stat"> <strong>12+ brands</strong>&nbsp;serviced</div>
+      <div class="strip-stat"> <strong>3,000+</strong>&nbsp;installations</div>
+      <div class="strip-stat"> All repairs&nbsp;<strong>warranty-backed</strong></div>
     </div>
   </div>
 </div>
@@ -707,18 +777,28 @@ footer{background:var(--bg-s);border-top:1px solid var(--border);padding:56px 24
       <p>Visit us or book a home visit — we cover all areas of Surat</p>
     </div>
     <div class="reveal">
-      <div class="map-wrap">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3721.123456789!2d72.8776!3d21.1702!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be04e9f8bbbbbbb%3A0x1000baaabbccddee!2sRadhe%20Krishna%20AC%20Repair%20Services!5e0!3m2!1sen!2sin!4v1234567890"
-          width="100%" height="380" style="border:0;" allowfullscreen="" loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
+      <div class="map-card">
+        <div class="map-wrap">
+          <div class="map-badge">
+            <div class="map-badge-icon">📍</div>
+            <div>
+              <strong>Radhe Krishna AC Repair</strong>
+              <small>Dindoli, Surat · Open daily from 8 AM to 10 PM</small>
+            </div>
+          </div>
+          <iframe
+            src="https://www.google.com/maps?q=A2%2F403%20Hansdev%20Residency%2C%20Dindoli%2C%20Surat%2C%20Gujarat%20394210&z=15&output=embed"
+            title="Radhe Krishna AC Repair location in Dindoli, Surat"
+            allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
       </div>
       <div class="map-info-bar">
         <div class="map-info-item"><span>📍</span><div><strong>A2/403 Hansdev Residency, Eladva</strong><br>Near Deep Darshan School Road, Dindoli, Surat, Gujarat 394210</div></div>
         <div class="map-info-item"><span>📞</span><div><strong>0932 711 3441</strong><br>Mon–Sun, 8 AM – 10 PM</div></div>
         <div class="map-info-item"><span>⚡</span><div><strong>2-Hour Response</strong><br>All areas of Surat covered</div></div>
-        <a href="https://www.google.com/maps/search/Radhe+Krishna+AC+Repair+Dindoli+Surat" target="_blank" rel="noopener" class="map-directions">🗺️ Get Directions</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=A2%2F403%20Hansdev%20Residency%2C%20Dindoli%2C%20Surat%2C%20Gujarat%20394210" target="_blank" rel="noopener" class="map-directions">Get Directions</a>
       </div>
     </div>
   </div>
@@ -766,7 +846,7 @@ footer{background:var(--bg-s);border-top:1px solid var(--border);padding:56px 24
             <div class="form-field"><input type="text" name="area" placeholder="Your Area" value="<?= htmlspecialchars($_POST['area']??'') ?>"/></div>
           </div>
           <div class="form-field"><textarea name="message" placeholder="Message"><?= htmlspecialchars($_POST['message']??'') ?></textarea></div>
-          <button type="submit" name="send_msg" class="btn-send">Send Message ✉️</button>
+          <button type="submit" name="send_msg" class="btn-send">Send Message </button>
           <div style="clear:both"></div>
         </form>
       </div>
@@ -840,7 +920,24 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
     if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
   });
 });
+ 
+// ── MOBILE MENU (NEW) ──
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const mobileNav = document.getElementById('mobileNav');
+const navOverlay = document.getElementById('navOverlay');
+ 
+function closeMobileMenu(){
+  hamburgerBtn.classList.remove('active');
+  mobileNav.classList.remove('open');
+  navOverlay.classList.remove('open');
+}
+hamburgerBtn.addEventListener('click', () => {
+  hamburgerBtn.classList.toggle('active');
+  mobileNav.classList.toggle('open');
+  navOverlay.classList.toggle('open');
+});
+navOverlay.addEventListener('click', closeMobileMenu);
+mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMobileMenu));
 </script>
 </body>
 </html>
- 
